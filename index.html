@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>DiffKit — Bandingkan JSON/CSV Offline</title>
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v16M16 4v16"/><path d="M4 8h4M16 16h4"/></svg>
+      </span>
+      <h1>DiffKit</h1>
+    </div>
+    <p class="tagline">Bandingkan dua file JSON/CSV — diproses di browser, tidak diunggah ke mana pun</p>
+  </div>
+</header>
+
+<main>
+  <section aria-labelledby="input-h">
+    <div class="section-head">
+      <h2 id="input-h">Data perbandingan</h2>
+      <p class="hint">JSON (array/objek) atau CSV dengan baris judul</p>
+    </div>
+
+    <div class="panes">
+      <div class="pane">
+        <div class="pane-head">
+          <span class="pane-title">Sisi A — acuan / lama</span>
+          <label class="btn-ghost">Pilih file<input type="file" id="fileA" accept=".json,.csv,.txt,application/json,text/csv" hidden></label>
+        </div>
+        <textarea id="textA" spellcheck="false" placeholder='[{"id":"1","nama":"Budi"}, …] atau:
+id,nama
+1,Budi'></textarea>
+      </div>
+      <div class="pane">
+        <div class="pane-head">
+          <span class="pane-title">Sisi B — pembanding / baru</span>
+          <label class="btn-ghost">Pilih file<input type="file" id="fileB" accept=".json,.csv,.txt,application/json,text/csv" hidden></label>
+        </div>
+        <textarea id="textB" spellcheck="false" placeholder='tempel isi file kedua di sini'></textarea>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="field-inline">
+        <label for="keyInput">Kunci baris</label>
+        <input type="text" id="keyInput" placeholder="auto (mis. id, symbol)" autocomplete="off">
+      </div>
+      <button type="button" class="btn-primary" id="btnRun">Bandingkan</button>
+      <p class="form-note" id="diffNote" hidden></p>
+    </div>
+  </section>
+
+  <section aria-labelledby="hasil-h">
+    <div class="section-head">
+      <h2 id="hasil-h">Hasil</h2>
+      <p class="hint" id="metaInfo"></p>
+    </div>
+
+    <div class="ledger">
+      <div class="stat added"><span class="stat-label">Tambah</span><span class="stat-value num" id="cntAdd">—</span><span class="stat-note">hanya di B</span></div>
+      <div class="stat removed"><span class="stat-label">Hapus</span><span class="stat-value num" id="cntDel">—</span><span class="stat-note">hanya di A</span></div>
+      <div class="stat changed"><span class="stat-label">Ubah</span><span class="stat-value num" id="cntChg">—</span><span class="stat-note">kunci sama, isi beda</span></div>
+      <div class="stat"><span class="stat-label">Sama</span><span class="stat-value num" id="cntSame">—</span><span class="stat-note">tidak berubah</span></div>
+    </div>
+
+    <div class="empty" id="emptyState">
+      <p>Belum ada perbandingan. Tempel kedua data (atau pilih file) lalu tekan <b>Bandingkan</b>.</p>
+    </div>
+    <ul class="list" id="diffList" hidden></ul>
+  </section>
+</main>
+
+<footer>Semua pemrosesan terjadi di browser ini. Tidak ada file yang dikirim ke server mana pun.</footer>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

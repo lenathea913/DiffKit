@@ -1,0 +1,16 @@
+# dependensi & build
+node_modules
+dist
+
+# environment / rahasia
+.env
+.env.local
+.dev.vars
+
+# data uji milik pengguna (jangan dipublikasikan)
+*.local.json
+
+# sampah OS / log
+*.log
+.DS_Store
+Thumbs.db
