@@ -15,6 +15,7 @@ Alat untuk **membandingkan dua file JSON atau CSV** tanpa mengunggahnya ke mana 
 - **Pilihan kunci baris** — ketik kolom pembanding (`id, symbol`), atau biarkan otomatis (mendeteksi kolom mirip `id`/`key`/`symbol`, selanjutnya kolom pertama)
 - **Empat hasil** — Tambah (hanya di B), Hapus (hanya di A), Ubah (kunci sama, isi beda), Sama
 - **Detail per baris** — nilai lama vs baru, dengan warna hijau/merah/amber
+- **JSON bersarang** — objek/array dibandingkan rekursif (nilai objek ditampilkan sebagai JSON)
 - **Offline penuh** — tidak ada permintaan jaringan, tidak ada akun
 
 ## 🚀 Mulai cepat
@@ -31,6 +32,7 @@ npm run dev     # lalu buka http://localhost:5176
 | Perintah | Fungsi |
 | --- | --- |
 | `npm run dev` | server pengembangan (port **5176**, dikunci) |
+| `npm test` | unit test `src/csv.js` & `src/diff.js` (`node --test`, tanpa dependensi) |
 | `npm run build` | build produksi ke `dist/` |
 | `npm run preview` | pratinjau hasil build |
 
@@ -47,6 +49,9 @@ DiffKit/
     ├── diff.js     # deteksi format, pemilihan kunci, diff per baris
     ├── main.js     # binding file/keyboard, render hasil
     └── style.css   # token & komponen visual
+test/
+├── csv.test.js    # parser CSV
+└── diff.test.js   # parse, kunci, diff, regresi JSON bersarang
 ```
 
 Konvensi: modul kecil satu-tanggung-jawab, komentar bahasa Indonesia, tanpa framework/pustaka runtime — Vite hanya sebagai toolchain.
@@ -64,7 +69,6 @@ Konvensi: modul kecil satu-tanggung-jawab, komentar bahasa Indonesia, tanpa fram
 
 - Ekspor hasil diff ke CSV/JSON
 - Diff per kolom terpilih (abaikan kolom tertentu, mis. `updated_at`)
-- Mode JSON *deep-diff* untuk objek bersarang
 - Simpan preferensi (kunci, abaikan kolom) di localStorage
 - Bandingkan via URL/parameter agar bisa dibagikan tanpa mengunggah data
 
@@ -74,7 +78,7 @@ Lihat [Issues](https://github.com/lenathea913/DiffKit/issues) untuk detail & dis
 
 1. Fork & buat branch fitur (`git checkout -b fitur/nama-fitur`)
 2. Ikuti pola yang ada: modul kecil, komentar Indonesia, tanpa dependensi baru tanpa diskusi dulu
-3. Pastikan `npm run build` lulus
+3. Pastikan `npm test` dan `npm run build` lulus
 4. Buka Pull Request yang menjelaskan *perubahan* dan *mengapa*
 
 Bug atau format file yang gagal dibaca? Buka [Issues](https://github.com/lenathea913/DiffKit/issues) — sertakan potongan data (dengan data sensitif yang sudah disamarkan).

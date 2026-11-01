@@ -19,5 +19,8 @@ jobs:
       - name: Install dependensi
         run: npm ci
 
+      - name: Uji (node --test)
+        run: npm test
+
       - name: Build
         run: npm run build

@@ -71,10 +71,37 @@ function groupBy(rows, keys) {
   return m;
 }
 
+const isObj = (v) => v !== null && typeof v === "object";
+
+/**
+ * Bandingkan dua nilai secara struktural.
+ * Objek/array dibandingkan isi-nya (rekursif), bukan lewat String()
+ * — kalau tidak, objek bersarang jadi "[object Object]" di kedua sisi
+ * dan selalu dianggap sama.
+ * Nilai primitif tetap dibandingkan sebagai teks ("1" sama dengan 1),
+ * supaya data JSON dan CSV bisa dibandingkan silang.
+ */
+const sameValue = (a, b) => {
+  const va = a ?? "", vb = b ?? "";
+  if (!isObj(va) || !isObj(vb)) {
+    if (isObj(va) !== isObj(vb)) return false;
+    return String(va) === String(vb);
+  }
+  if (Array.isArray(va) !== Array.isArray(vb)) return false;
+  if (Array.isArray(va)) {
+    return va.length === vb.length && va.every((v, i) => sameValue(v, vb[i]));
+  }
+  const ka = Object.keys(va), kb = Object.keys(vb);
+  if (ka.length !== kb.length) return false;
+  return ka.every((k) =>
+    Object.prototype.hasOwnProperty.call(vb, k) && sameValue(va[k], vb[k])
+  );
+};
+
 const sameRow = (a, b) => {
   const ka = Object.keys(a), kb = Object.keys(b);
   if (ka.length !== kb.length) return false;
-  return ka.every(k => String(a[k] ?? "") === String(b[k] ?? ""));
+  return ka.every(k => sameValue(a[k], b[k]));
 };
 
 /**
@@ -109,4 +136,4 @@ function diff(aRows, bRows, requestedKeys) {
   return { added, removed, changed, same, keys, cols };
 }
 
-export { parseInput, columns, pickKeyCols, diff };
+export { parseInput, columns, pickKeyCols, sameValue, diff };

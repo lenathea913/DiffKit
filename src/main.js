@@ -2,7 +2,7 @@
    DiffKit — main.js : baca file/tempel teks, jalankan diff,
    render ringkasan & daftar perubahan.
    ============================================================ */
-import { parseInput, diff } from "./diff.js";
+import { parseInput, diff, sameValue } from "./diff.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const LIST_LIMIT = 120;
@@ -37,10 +37,43 @@ function bindFile(fileSel, textSel) {
 }
 
 /* ---------- render ---------- */
+/** nilai → teks tampil: objek/array ditulis sebagai JSON, bukan [object Object] */
+function fmtVal(v) {
+  if (v !== null && typeof v === "object") {
+    try { return JSON.stringify(v); } catch (e) { return String(v); }
+  }
+  return v ?? "";
+}
+
 function rowLine(row) {
   return Object.entries(row)
-    .map(([k, v]) => `<span class="kv"><b>${esc(k)}</b> ${esc(v)}</span>`)
+    .map(([k, v]) => `<span class="kv"><b>${esc(k)}</b> ${esc(fmtVal(v))}</span>`)
     .join("");
+}
+
+/**
+ * Detail baris "Ubah": hanya kolom yang benar-benar berbeda yang ditandai
+ * (nama kolom + nilai lama → baru). Kolom sama diringkas jadi satu catatan.
+ */
+function changedLine(d) {
+  const before = d.before || {};
+  const after = d.after || {};
+  const cols = [...new Set([...Object.keys(before), ...Object.keys(after)])];
+  const diffCols = cols.filter((c) => !sameValue(before[c], after[c]));
+  const sameCount = cols.length - diffCols.length;
+
+  const body = diffCols
+    .map(
+      (c) =>
+        `<span class="kv chg"><b>${esc(c)}</b>` +
+        `<s class="old">${esc(fmtVal(before[c]))}</s>` +
+        `<i class="arrow">→</i><span class="new">${esc(fmtVal(after[c]))}</span></span>`
+    )
+    .join("");
+  const note = sameCount
+    ? `<span class="kv same-note">+ ${sameCount} kolom lain tidak berubah</span>`
+    : "";
+  return `<div class="d-row">${body}${note}</div>`;
 }
 
 function item(cls, label, key, body) {
@@ -65,8 +98,7 @@ function render(res, fmtA, fmtB) {
 
   const parts = [];
   res.changed.forEach(d =>
-    parts.push(item("changed", "Ubah", d.key,
-      `<div class="d-row">${rowLine(d.before)}</div><div class="d-row after">${rowLine(d.after)}</div>`))
+    parts.push(item("changed", "Ubah", d.key, changedLine(d)))
   );
   res.added.forEach(d => parts.push(item("added", "Tambah", d.key, `<div class="d-row">${rowLine(d.row)}</div>`)));
   res.removed.forEach(d => parts.push(item("removed", "Hapus", d.key, `<div class="d-row">${rowLine(d.row)}</div>`)));
