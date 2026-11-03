@@ -7,6 +7,9 @@ export default defineConfig({
     port: 5176,
     strictPort: true,
   },
+  // Path aset relatif agar build statis tetap benar di GitHub Pages
+  // (https://lenathea913.github.io/DiffKit/) maupun saat dibuka lokal.
+  base: './',
   build: {
     outDir: 'dist',
     sourcemap: false,
