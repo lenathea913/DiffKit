@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 ![Vite](https://img.shields.io/badge/build-Vite_5-646CFF.svg)
 
+**Demo online:** <https://lenathea913.github.io/DiffKit/> — build statis repo ini. Datanya tetap lokal di browser, jadi terbuka dalam keadaan kosong; pindahkan dari versi lokal lewat backup.
+
 > **English:** A free, open-source **offline JSON/CSV diff tool** that runs entirely in your browser — drop in two files (or paste text), pick the row key, and see what was added, removed or changed. Nothing is ever uploaded. Built with vanilla JS + Vite, MIT licensed.
 
 Alat untuk **membandingkan dua file JSON atau CSV** tanpa mengunggahnya ke mana pun: semua diproses di browser. Cocok untuk memeriksa hasil ekspor, backup, konfigurasi, atau data sebelum-sesudah perubahan script.
